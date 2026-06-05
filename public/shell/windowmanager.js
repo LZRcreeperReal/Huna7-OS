@@ -1,31 +1,78 @@
 /**
  * HUNA7-OS :: L1 UI SHELL
- * Window Manager — create, drag, resize, minimize, close
+ * Window Manager — create, snap-drag, minimize, close
+ * FIXED: Windows snap to a 12px grid on mouseup instead of free-floating
  */
 
 const WindowManager = (() => {
   const _windows = {};
   let _zTop = 100;
   let _nextWinId = 1;
+  const SNAP = 12; // snap grid size in px
+
+  function _snap(v) {
+    return Math.round(v / SNAP) * SNAP;
+  }
 
   function _makeDraggable(el, handleEl) {
     let ox = 0, oy = 0, startX = 0, startY = 0;
+    let dragging = false;
+    let ghost = null;
+
     handleEl.addEventListener('mousedown', e => {
       if (e.target.classList.contains('win-btn')) return;
       e.preventDefault();
+      dragging = true;
       startX = e.clientX; startY = e.clientY;
       ox = el.offsetLeft; oy = el.offsetTop;
-      const onMove = (e2) => {
-        el.style.left = (ox + e2.clientX - startX) + 'px';
-        el.style.top = (oy + e2.clientY - startY) + 'px';
-      };
-      const onUp = () => {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-      };
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
+
+      // Create ghost indicator
+      ghost = document.createElement('div');
+      ghost.style.cssText = `
+        position:absolute;
+        left:${ox}px; top:${oy}px;
+        width:${el.offsetWidth}px; height:${el.offsetHeight}px;
+        border:2px dashed var(--os-accent);
+        border-radius:var(--os-radius2);
+        pointer-events:none;
+        z-index:9999;
+        opacity:0.4;
+        background:rgba(59,130,246,0.05);
+        transition: none;
+      `;
+      el.parentElement.appendChild(ghost);
     });
+
+    const onMove = (e2) => {
+      if (!dragging) return;
+      const dx = e2.clientX - startX;
+      const dy = e2.clientY - startY;
+      const newX = ox + dx;
+      const newY = oy + dy;
+      const taskbarH = 44;
+      const maxX = window.innerWidth  - el.offsetWidth;
+      const maxY = window.innerHeight - taskbarH - el.offsetHeight;
+      const cx = Math.max(0, Math.min(newX, maxX));
+      const cy = Math.max(0, Math.min(newY, maxY));
+      // Move window freely while dragging for responsiveness
+      el.style.left = cx + 'px';
+      el.style.top  = cy + 'px';
+      if (ghost) { ghost.style.left = _snap(cx) + 'px'; ghost.style.top = _snap(cy) + 'px'; }
+    };
+
+    const onUp = () => {
+      if (!dragging) return;
+      dragging = false;
+      // Snap to grid on release
+      const cx = parseFloat(el.style.left) || 0;
+      const cy = parseFloat(el.style.top)  || 0;
+      el.style.left = _snap(cx) + 'px';
+      el.style.top  = _snap(cy) + 'px';
+      if (ghost) { ghost.remove(); ghost = null; }
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
   }
 
   function create(opts = {}) {
@@ -33,10 +80,11 @@ const WindowManager = (() => {
     const desktop = document.getElementById('huna7-desktop');
     if (!desktop) return null;
 
-    const w = opts.width || 600;
+    const w = opts.width  || 600;
     const h = opts.height || 420;
-    const x = opts.x || Math.floor(Math.random() * 200) + 80;
-    const y = opts.y || Math.floor(Math.random() * 100) + 60;
+    // Snap initial position to grid
+    const x = _snap(opts.x || Math.floor(Math.random() * 200) + 80);
+    const y = _snap(opts.y || Math.floor(Math.random() * 100) + 60);
 
     const el = document.createElement('div');
     el.className = 'huna7-window';
@@ -78,7 +126,8 @@ const WindowManager = (() => {
       btn.textContent = opts.title || 'App';
       btn.addEventListener('click', () => {
         if (_windows[winId]) {
-          if (_windows[winId].minimized) restore(winId); else el.style.zIndex = ++_zTop;
+          if (_windows[winId].minimized) restore(winId);
+          else el.style.zIndex = ++_zTop;
         }
       });
       tb.appendChild(btn);
