@@ -608,14 +608,14 @@ AppRegistry.register('themes', {
 });
 
 // ── Auto-apply saved theme at boot ──────────────────────────
-(function autoApplyTheme() {
+// ── Auto-apply saved theme at boot ──────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
   try {
     const raw = localStorage.getItem('huna7_active_theme_v1');
     if (!raw) return;
     const theme = JSON.parse(raw);
-    // Will be called after DOM is ready
-    window.__HUNA7_BUS__.on('app.launch', () => {}); // ensure bus exists
-    // Apply immediately
+    
+    // Safely apply root colors
     const r = document.documentElement.style;
     const c = theme.colors || {};
     const map = {
@@ -626,5 +626,26 @@ AppRegistry.register('themes', {
       '--os-text': c.text, '--os-text2': c.text2, '--os-text3': c.text3
     };
     Object.entries(map).forEach(([k, v]) => { if (v) r.setProperty(k, v); });
-  } catch(e) { /* silent */ }
-})();
+
+    // Now safely apply the desktop background pattern because the DOM is ready!
+    const desktop = document.getElementById('huna7-desktop');
+    if (desktop) {
+      const acc = c.accent || '#3b82f6';
+      const acc2 = c.accent2 || '#6366f1';
+      const patternMap = {
+        grid: `radial-gradient(ellipse 60% 50% at 30% 20%, ${acc}08 0%, transparent 70%),
+               repeating-linear-gradient(0deg, transparent, transparent 39px, ${acc}10 39px, ${acc}10 40px),
+               repeating-linear-gradient(90deg, transparent, transparent 39px, ${acc}08 39px, ${acc}08 40px)`,
+        dots: `radial-gradient(circle at 50% 50%, ${acc}06 0%, transparent 70%),
+               radial-gradient(${acc}15 1px, transparent 1px)`,
+        noise: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`,
+        solid: 'none',
+        gradient: `linear-gradient(135deg, ${acc}12 0%, ${acc2}08 50%, transparent 100%)`
+      };
+      const bg = theme.background || 'grid';
+      desktop.style.backgroundImage = patternMap[bg] || patternMap.grid;
+    }
+  } catch(e) { 
+    console.error("Theme boot injection failed safely:", e); 
+  }
+});
