@@ -49,6 +49,7 @@ huna7-os/
     ├── shell/
     │   └── windowmanager.js    ← L1: Window manager + drag/minimize/close
     └── apps/
+        └── themes.js         Working Public Theme Library and code/preset theme editors
         └── registry.js         ← L6: Built-in app registry + launchers
 ```
 
@@ -129,7 +130,7 @@ Event {
 
 ---
 
-## Built-in Applications
+## Built-in Applications (Starter apps/registry.js)
 
 | App | ID | Description |
 |-----|----|-------------|
