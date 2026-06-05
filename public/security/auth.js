@@ -1,11 +1,13 @@
 /**
  * HUNA7-OS :: SECURITY MODULE
  * Salted SHA-256 admin authentication
+ * Password: Oliver0727Oliver0727!
  */
 
 const HunaAuth = (() => {
-  const SALT = 'z/vmxbdfRmuDPpOcN3AQ0iI+tgoPGH/V';
-  const STORED_HASH = 'efa7bfdd8dec364add6f6cfd7a9705093b41ac568522126b6df9a6339b09fb7e';
+  // Salt and hash for: Oliver0727Oliver0727!
+  const SALT = 'huna7_os_admin_salt_2025';
+  const STORED_HASH = 'f79a857ade022d1f1cdb3e8afceb8f93fc40e6acddad472a0da7a311646131ad';
   let _adminSession = false;
 
   async function _sha256(message) {
