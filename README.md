@@ -95,18 +95,6 @@ end
 | `OS.event.emit(type, payload)` | Emit kernel event |
 | `OS.event.listen(type, fn)` | Listen to kernel events |
 
----
-
-## Security
-
-- Admin password: hashed with salted SHA-256 (Web Crypto API)
-- Salt: `z/vmxbdfRmuDPpOcN3AQ0iI+tgoPGH/V`
-- Hash: `efa7bfdd8dec364add6f6cfd7a9705093b41ac568522126b6df9a6339b09fb7e`
-- To authenticate: open Terminal and type `admin`
-- Session persists until revoked or page reload
-
----
-
 ## Event Bus Schema
 
 All inter-module communication goes through the kernel event bus:
