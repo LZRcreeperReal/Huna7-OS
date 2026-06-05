@@ -378,7 +378,7 @@ AppRegistry.register('files', {
         AppRegistry.launchWith('editor', { filePath });
       } else if (target === 'terminal') {
         // Open terminal and immediately cat the file
-        AppRegistry.launchWith('terminal', { initialCmd: 'cat ' + filePath });
+        AppRegistry.launchWith('terminal', { initialCmd: 'vox ' + filePath });
       } else if (target === 'voxpad' && filePath.endsWith('.vox')) {
         // For .vox files, could open in VoxPad in future
         AppRegistry.launchWith('editor', { filePath });
