@@ -1,4 +1,4 @@
-# HUNA7-OS (Not Updating) ~ could be old
+# HUNA7-OS (Not Updating ReadMe) ~ could be old
 
 A fully modular browser-based operating system simulation with kernel architecture, sandboxed processes, virtual filesystem, and VoxScript VM.
 
