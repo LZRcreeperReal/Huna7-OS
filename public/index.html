@@ -49,12 +49,14 @@ body {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   transition: opacity 0.6s ease;
+  padding: 20px;
 }
 
 .boot-logo {
   margin-bottom: 40px;
   animation: bootLogoReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   opacity: 0;
+  max-width: 100%;
 }
 
 @keyframes bootLogoReveal {
@@ -64,7 +66,7 @@ body {
 }
 
 .boot-stages {
-  width: 380px;
+  width: min(380px, 90vw);
   margin-bottom: 24px;
 }
 
@@ -89,7 +91,7 @@ body {
 .boot-stage.done   .boot-stage-dot { background: var(--os-green); }
 
 .boot-bar-wrap {
-  width: 380px; height: 2px;
+  width: min(380px, 90vw); height: 2px;
   background: var(--os-border);
   border-radius: 2px;
   overflow: hidden;
@@ -109,6 +111,124 @@ body {
   letter-spacing: 0.2em;
   font-family: var(--os-font);
 }
+
+/* ─── FIRST-BOOT SETUP SCREEN ──────────────────────────── */
+#setup-screen {
+  position: fixed; inset: 0; z-index: 9998;
+  background: #000;
+  display: none;
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+
+.setup-card {
+  background: var(--os-surface);
+  border: 1px solid var(--os-border2);
+  border-radius: var(--os-radius2);
+  padding: 40px 36px;
+  width: min(400px, 92vw);
+  box-shadow: var(--os-shadow), var(--os-glow);
+  animation: winOpen 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.setup-logo {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 28px;
+}
+.setup-title {
+  font-size: 18px; font-weight: 700; color: var(--os-text);
+  letter-spacing: 0.05em;
+}
+.setup-sub {
+  font-size: 12px; color: var(--os-text3);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+.setup-label {
+  font-size: 11px; color: var(--os-text2);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 8px; display: block;
+}
+.setup-input {
+  width: 100%;
+  background: var(--os-bg); border: 1px solid var(--os-border2);
+  color: var(--os-text); padding: 10px 14px;
+  border-radius: var(--os-radius); font-size: 13px;
+  font-family: var(--os-font-ui); outline: none;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.setup-input:focus { border-color: var(--os-accent); }
+.setup-btn {
+  width: 100%; padding: 11px;
+  background: var(--os-accent); border: none;
+  color: #fff; font-family: var(--os-font-ui);
+  font-size: 13px; border-radius: var(--os-radius);
+  cursor: pointer; transition: filter 0.15s;
+  margin-top: 4px;
+}
+.setup-btn:hover { filter: brightness(1.15); }
+.setup-err {
+  font-size: 11px; color: var(--os-red);
+  margin-top: -8px; margin-bottom: 12px;
+  min-height: 16px;
+}
+.setup-hint {
+  font-size: 10px; color: var(--os-text3);
+  margin-top: 16px; text-align: center;
+  line-height: 1.5;
+}
+
+/* ─── LOCK SCREEN ─────────────────────────────────────── */
+#lock-screen {
+  position: fixed; inset: 0; z-index: 9997;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(20px);
+  display: none;
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+
+.lock-card {
+  background: var(--os-surface);
+  border: 1px solid var(--os-border2);
+  border-radius: var(--os-radius2);
+  padding: 40px 36px;
+  width: min(360px, 92vw);
+  box-shadow: var(--os-shadow), var(--os-glow);
+  text-align: center;
+  animation: winOpen 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.lock-avatar {
+  width: 64px; height: 64px;
+  background: var(--os-surface2);
+  border: 2px solid var(--os-border2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 28px;
+}
+.lock-username {
+  font-size: 16px; color: var(--os-text);
+  font-weight: 700; margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+.lock-sub {
+  font-size: 11px; color: var(--os-text3);
+  margin-bottom: 24px;
+}
+.lock-err {
+  font-size: 11px; color: var(--os-red);
+  margin-bottom: 10px; min-height: 16px;
+}
+.lock-reset {
+  font-size: 10px; color: var(--os-text3);
+  margin-top: 16px; cursor: pointer;
+  text-decoration: underline;
+}
+.lock-reset:hover { color: var(--os-red); }
 
 /* ─── DESKTOP ──────────────────────────────────────────── */
 #huna7-desktop {
@@ -165,6 +285,7 @@ body {
   padding: 4px 8px;
   border-radius: var(--os-radius);
   transition: background 0.15s;
+  flex-shrink: 0;
 }
 .taskbar-logo:hover { background: var(--os-border); }
 .taskbar-logo-text {
@@ -174,11 +295,16 @@ body {
   color: var(--os-text);
 }
 
-.taskbar-sep { width: 1px; height: 24px; background: var(--os-border); margin: 0 4px; }
+/* hide text on very small screens */
+@media (max-width: 480px) {
+  .taskbar-logo-text { display: none; }
+}
+
+.taskbar-sep { width: 1px; height: 24px; background: var(--os-border); margin: 0 4px; flex-shrink: 0; }
 
 #huna7-taskbar-apps {
   display: flex; align-items: center; gap: 4px;
-  flex: 1; overflow-x: auto;
+  flex: 1; overflow-x: auto; min-width: 0;
 }
 #huna7-taskbar-apps::-webkit-scrollbar { display: none; }
 
@@ -186,16 +312,17 @@ body {
   background: var(--os-surface2);
   border: 1px solid var(--os-border);
   color: var(--os-text2);
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: var(--os-radius);
   font-size: 11px;
   font-family: var(--os-font-ui);
   cursor: pointer;
   transition: all 0.15s;
-  max-width: 140px;
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .taskbar-app-btn:hover { background: var(--os-border2); color: var(--os-text); }
 .taskbar-app-btn.minimized { opacity: 0.5; font-style: italic; }
@@ -207,11 +334,15 @@ body {
   white-space: nowrap;
   flex-shrink: 0;
 }
+/* shorten clock on small screens */
+@media (max-width: 600px) {
+  .taskbar-clock-date { display: none; }
+}
 
 /* ─── LAUNCHER / APP MENU ──────────────────────────────── */
 #huna7-launcher {
   position: fixed; bottom: var(--os-taskbar-h); left: 0;
-  width: 340px; background: var(--os-surface);
+  width: min(340px, 96vw); background: var(--os-surface);
   border: 1px solid var(--os-border2);
   border-bottom: none;
   border-radius: var(--os-radius2) var(--os-radius2) 0 0;
@@ -259,7 +390,10 @@ body {
   display: flex; flex-direction: column;
   overflow: hidden;
   animation: winOpen 0.18s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  min-width: 300px; min-height: 200px;
+  min-width: 280px; min-height: 180px;
+  /* clamp window size on small screens */
+  max-width: calc(100vw - 8px);
+  max-height: calc(100vh - var(--os-taskbar-h) - 8px);
 }
 @keyframes winOpen {
   from { opacity: 0; transform: scale(0.92) translateY(8px); }
@@ -358,12 +492,14 @@ body {
   border-bottom: 1px solid var(--os-border);
   background: var(--os-surface2);
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 .ed-input {
   background: var(--os-bg); border: 1px solid var(--os-border2);
   color: var(--os-text); padding: 4px 8px;
   border-radius: var(--os-radius); font-size: 11px;
   font-family: var(--os-font-ui);
+  min-width: 0; flex: 1;
 }
 .ed-status { font-size: 11px; color: var(--os-green); margin-left: 4px; }
 .ed-textarea {
@@ -380,7 +516,7 @@ body {
   padding: 8px 12px; border-bottom: 1px solid var(--os-border);
   background: var(--os-surface2);
 }
-.fm-path { flex: 1; font-size: 12px; color: var(--os-text2); font-family: var(--os-font); }
+.fm-path { flex: 1; font-size: 12px; color: var(--os-text2); font-family: var(--os-font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fm-list { flex: 1; overflow-y: auto; padding: 8px; scrollbar-width: thin; scrollbar-color: var(--os-border) transparent; }
 .fm-item {
   display: flex; align-items: center; gap: 10px;
@@ -419,6 +555,12 @@ body {
 .vox-line { line-height: 1.6; white-space: pre-wrap; color: var(--os-text); }
 .vox-err  { color: var(--os-red); }
 .vox-sys  { color: var(--os-text3); }
+
+/* on very small screens stack voxpad vertically */
+@media (max-width: 500px) {
+  .vox-split { flex-direction: column; }
+  .vox-editor { border-right: none; border-bottom: 1px solid var(--os-border); }
+}
 
 /* ─── NAVIGATOR APP ─────────────────────────────────────── */
 .app-nav { display: flex; flex-direction: column; height: 100%; }
@@ -465,12 +607,15 @@ body {
   border-radius: var(--os-radius);
   transition: background 0.12s;
   width: 80px; text-align: center;
+  /* dragging state */
 }
 .desktop-icon:hover { background: rgba(255,255,255,0.06); }
+.desktop-icon.dragging { opacity: 0.75; background: rgba(59,130,246,0.12); cursor: grabbing; z-index: 4999 !important; }
 .desktop-icon-label {
   font-size: 11px; color: var(--os-text2);
   text-shadow: 0 1px 3px rgba(0,0,0,0.8);
   line-height: 1.3; word-break: break-word;
+  pointer-events: none;
 }
 
 /* ─── NOTIFICATIONS ─────────────────────────────────────── */
@@ -479,6 +624,7 @@ body {
   z-index: 7000;
   display: flex; flex-direction: column; gap: 8px;
   pointer-events: none;
+  max-width: calc(100vw - 28px);
 }
 .notif {
   background: var(--os-surface);
@@ -520,21 +666,16 @@ body {
           <stop offset="100%" stop-color="#6366f1"/>
         </linearGradient>
       </defs>
-      <!-- H mark -->
       <rect x="8" y="8" width="4" height="28" fill="url(#lg1)" rx="1"/>
       <rect x="8" y="20" width="14" height="4" fill="url(#lg1)" rx="1"/>
       <rect x="18" y="8" width="4" height="28" fill="url(#lg1)" rx="1"/>
-      <!-- 7 mark -->
       <rect x="26" y="8" width="14" height="4" fill="url(#lg1)" rx="1"/>
       <rect x="34" y="12" width="4" height="12" fill="url(#lg1)" rx="1" transform="rotate(-10 36 18)"/>
-      <!-- OS text -->
       <text x="50" y="32" fill="#e2e8f0" font-family="Courier Prime, monospace" font-size="26" font-weight="700" letter-spacing="1">HUNA7</text>
       <text x="152" y="32" fill="url(#lg1)" font-family="Courier Prime, monospace" font-size="26" font-weight="700">-OS</text>
-      <!-- subtitle line -->
       <text x="50" y="46" fill="#475569" font-family="Courier New, monospace" font-size="9" letter-spacing="4">KERNEL SYSTEM v1.0</text>
     </svg>
   </div>
-
   <div class="boot-stages" id="boot-stages">
     <div class="boot-stage" id="bs-0"><div class="boot-stage-dot"></div>Initializing kernel core...</div>
     <div class="boot-stage" id="bs-1"><div class="boot-stage-dot"></div>Mounting virtual file system...</div>
@@ -545,6 +686,50 @@ body {
   </div>
   <div class="boot-bar-wrap"><div class="boot-bar" id="boot-bar"></div></div>
   <div class="boot-version">HUNA7-OS &nbsp;&middot;&nbsp; BUILD 2025.06</div>
+</div>
+
+<!-- ═══ FIRST-BOOT SETUP ════════════════════════════════════ -->
+<div id="setup-screen">
+  <div class="setup-card">
+    <div class="setup-logo">
+      <svg width="28" height="28" viewBox="0 0 28 28">
+        <defs><linearGradient id="slg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+        <rect x="2" y="2" width="24" height="24" rx="6" fill="url(#slg)" opacity="0.2"/>
+        <rect x="2" y="2" width="24" height="24" rx="6" fill="none" stroke="url(#slg)" stroke-width="1.5"/>
+        <path d="M9 11a5 5 0 0 1 10 0v1H9z" fill="url(#slg)" opacity="0.8"/>
+        <rect x="7" y="12" width="14" height="10" rx="2" fill="none" stroke="url(#slg)" stroke-width="1.5"/>
+        <circle cx="14" cy="17" r="1.5" fill="url(#slg)"/>
+      </svg>
+      <span class="setup-title">Welcome to HUNA7-OS</span>
+    </div>
+    <p class="setup-sub">Create a password to protect your data. You'll need this every time you open the OS.</p>
+
+    <label class="setup-label" for="setup-user">Username</label>
+    <input class="setup-input" id="setup-user" type="text" placeholder="e.g. admin" maxlength="24" autocomplete="off"/>
+
+    <label class="setup-label" for="setup-pw">Password</label>
+    <input class="setup-input" id="setup-pw" type="password" placeholder="Choose a password"/>
+
+    <label class="setup-label" for="setup-pw2">Confirm Password</label>
+    <input class="setup-input" id="setup-pw2" type="password" placeholder="Repeat password"/>
+
+    <div class="setup-err" id="setup-err"></div>
+    <button class="setup-btn" id="setup-submit">Create Account &amp; Boot</button>
+    <p class="setup-hint">Your password is hashed locally and never leaves this device.<br>Resetting your password wipes all stored data.</p>
+  </div>
+</div>
+
+<!-- ═══ LOCK SCREEN ══════════════════════════════════════════ -->
+<div id="lock-screen">
+  <div class="lock-card">
+    <div class="lock-avatar">🖥</div>
+    <div class="lock-username" id="lock-username">User</div>
+    <div class="lock-sub">Enter your password to unlock</div>
+    <div class="lock-err" id="lock-err"></div>
+    <input class="setup-input" id="lock-pw" type="password" placeholder="Password" style="text-align:center"/>
+    <button class="setup-btn" id="lock-submit">Unlock</button>
+    <div class="lock-reset" id="lock-reset">Forgot password? Reset &amp; wipe data</div>
+  </div>
 </div>
 
 <!-- ═══ DESKTOP ════════════════════════════════════════════ -->
@@ -610,19 +795,46 @@ body {
 
 <script>
 /* ═══════════════════════════════════════════════════════════
-   HUNA7-OS :: BOOT SEQUENCE + SHELL INIT
+   HUNA7-OS :: AUTH STORAGE + ACCOUNT SYSTEM
+   Stores: huna7_account = { username, hash, salt }
+   All data encrypted under user password via SHA-256
 ═══════════════════════════════════════════════════════════ */
+const ACCOUNT_KEY = 'huna7_account_v1';
+const ICON_POS_KEY = 'huna7_icon_positions_v1';
 
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function getAccount() {
+  try { return JSON.parse(localStorage.getItem(ACCOUNT_KEY)); } catch { return null; }
+}
+
+function saveAccount(username, hash, salt) {
+  localStorage.setItem(ACCOUNT_KEY, JSON.stringify({ username, hash, salt }));
+}
+
+function wipeAccount() {
+  // clear all OS data
+  Object.keys(localStorage).forEach(k => {
+    if (k.startsWith('huna7')) localStorage.removeItem(k);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: BOOT SEQUENCE
+═══════════════════════════════════════════════════════════ */
 const BOOT_STAGES = [
-  { delay: 300,  duration: 400 },  // kernel
-  { delay: 750,  duration: 500 },  // vfs
-  { delay: 1300, duration: 400 },  // vox
-  { delay: 1750, duration: 350 },  // scheduler
-  { delay: 2150, duration: 350 },  // security
-  { delay: 2550, duration: 400 },  // ui shell
+  { delay: 300,  duration: 400 },
+  { delay: 750,  duration: 500 },
+  { delay: 1300, duration: 400 },
+  { delay: 1750, duration: 350 },
+  { delay: 2150, duration: 350 },
+  { delay: 2550, duration: 400 },
 ];
 
-function runBootStage(idx, done) {
+function runBootStage(idx) {
   return new Promise(resolve => {
     setTimeout(() => {
       const el = document.getElementById('bs-' + idx);
@@ -638,23 +850,108 @@ function runBootStage(idx, done) {
 }
 
 async function bootSequence() {
-  for (let i = 0; i < BOOT_STAGES.length; i++) {
-    await runBootStage(i);
-  }
-  // finalize boot
+  for (let i = 0; i < BOOT_STAGES.length; i++) await runBootStage(i);
+
   setTimeout(() => {
     const bs = document.getElementById('boot-screen');
     bs.style.opacity = '0';
     setTimeout(() => {
       bs.style.display = 'none';
-      const desktop = document.getElementById('huna7-desktop');
-      desktop.style.display = 'block';
-      initShell();
+      const account = getAccount();
+      if (!account) {
+        showSetup();
+      } else {
+        showLock(account.username);
+      }
     }, 600);
   }, 400);
 }
 
-/* ─── SHELL INIT ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: FIRST-BOOT SETUP
+═══════════════════════════════════════════════════════════ */
+function showSetup() {
+  const screen = document.getElementById('setup-screen');
+  screen.style.display = 'flex';
+  document.getElementById('setup-user').focus();
+
+  document.getElementById('setup-submit').addEventListener('click', async () => {
+    const username = document.getElementById('setup-user').value.trim();
+    const pw  = document.getElementById('setup-pw').value;
+    const pw2 = document.getElementById('setup-pw2').value;
+    const err = document.getElementById('setup-err');
+
+    if (!username) { err.textContent = 'Please enter a username.'; return; }
+    if (pw.length < 4) { err.textContent = 'Password must be at least 4 characters.'; return; }
+    if (pw !== pw2) { err.textContent = 'Passwords do not match.'; return; }
+    err.textContent = '';
+
+    // generate a random salt
+    const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+      .map(b => b.toString(16).padStart(2,'0')).join('');
+    const hash = await sha256(salt + pw);
+
+    saveAccount(username, hash, salt);
+    screen.style.display = 'none';
+    launchDesktop();
+  });
+
+  // allow Enter key
+  ['setup-user','setup-pw','setup-pw2'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('setup-submit').click();
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: LOCK SCREEN
+═══════════════════════════════════════════════════════════ */
+function showLock(username) {
+  const screen = document.getElementById('lock-screen');
+  screen.style.display = 'flex';
+  document.getElementById('lock-username').textContent = username || 'User';
+  document.getElementById('lock-pw').value = '';
+  document.getElementById('lock-err').textContent = '';
+  setTimeout(() => document.getElementById('lock-pw').focus(), 100);
+
+  document.getElementById('lock-submit').onclick = async () => {
+    const pw = document.getElementById('lock-pw').value;
+    const account = getAccount();
+    if (!account) { showSetup(); return; }
+
+    const hash = await sha256(account.salt + pw);
+    if (hash === account.hash) {
+      screen.style.display = 'none';
+      launchDesktop();
+    } else {
+      document.getElementById('lock-err').textContent = 'Incorrect password.';
+      document.getElementById('lock-pw').value = '';
+      document.getElementById('lock-pw').focus();
+    }
+  };
+
+  document.getElementById('lock-pw').onkeydown = e => {
+    if (e.key === 'Enter') document.getElementById('lock-submit').click();
+  };
+
+  document.getElementById('lock-reset').onclick = () => {
+    if (confirm('⚠️ This will wipe ALL your data and reset the OS.\n\nContinue?')) {
+      wipeAccount();
+      location.reload();
+    }
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: SHELL INIT
+═══════════════════════════════════════════════════════════ */
+function launchDesktop() {
+  const desktop = document.getElementById('huna7-desktop');
+  desktop.style.display = 'block';
+  initShell();
+}
+
 function initShell() {
   buildDesktopIcons();
   buildLauncher();
@@ -662,53 +959,147 @@ function initShell() {
   registerDesktopEvents();
   notify('HUNA7-OS ready.', 'ok');
   OS.system.log('Desktop initialized');
-
-  // spawn initial OS processes
   window.__HUNA7_PROCS__.spawn('desktop-shell', 'system', {});
   window.__HUNA7_PROCS__.spawn('vfs-daemon',    'system', {});
   window.__HUNA7_PROCS__.spawn('event-bus',     'system', {});
 }
 
-/* ─── DESKTOP ICONS ─────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: DESKTOP ICONS
+   — Positions saved to localStorage per icon
+   — Draggable with mousedown/mousemove/mouseup
+   — Responsive: icons auto-clamp to screen bounds
+═══════════════════════════════════════════════════════════ */
 const DESKTOP_ICONS = [
-  { appId: 'terminal', label: 'Terminal', x: 20, y: 20,
-    icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#0ea5e9" opacity="0.15"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#0ea5e9" stroke-width="1.2"/><path d="M10 13l4 4-4 4M18 21h8" stroke="#0ea5e9" stroke-width="1.8" stroke-linecap="round"/></svg>` },
-  { appId: 'editor', label: 'Text Editor', x: 20, y: 120,
-    icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#6366f1" opacity="0.15"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#6366f1" stroke-width="1.2"/><path d="M10 12h10l4 4v8H10z" fill="none" stroke="#6366f1" stroke-width="1.5"/><path d="M13 20h7M13 23h5" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/></svg>` },
-  { appId: 'files', label: 'Files', x: 20, y: 220,
-    icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#f59e0b" opacity="0.12"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#f59e0b" stroke-width="1.2"/><path d="M8 14h7l2 2h11v10H8z" fill="none" stroke="#f59e0b" stroke-width="1.5"/></svg>` },
-  { appId: 'voxpad', label: 'VoxPad', x: 20, y: 320,
-    icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#22c55e" opacity="0.12"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#22c55e" stroke-width="1.2"/><path d="M12 12h5M12 17l8 0M12 22l6 0" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/><circle cx="24" cy="22" r="4" fill="none" stroke="#22c55e" stroke-width="1.5"/><path d="M26 24l2 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg>` },
-  { appId: 'navigator', label: 'Navigator', x: 20, y: 420,
-    icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#3b82f6" opacity="0.12"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#3b82f6" stroke-width="1.2"/><circle cx="18" cy="18" r="8" fill="none" stroke="#3b82f6" stroke-width="1.5"/><path d="M18 10v16M10 18h16" stroke="#3b82f6" stroke-width="1" opacity="0.5"/><path d="M14 12a10 10 0 0 0 0 12M22 12a10 10 0 0 1 0 12" fill="none" stroke="#3b82f6" stroke-width="1.2"/></svg>` },
-  { appId: 'sysmon', label: 'Sys Monitor', x: 20, y: 520,
-    icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#ef4444" opacity="0.1"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#ef4444" stroke-width="1.2"/><path d="M8 22l4-6 4 4 4-6 4 4" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>` },
-  { appId: 'library', label: 'Library', x: 20, y: 620,
-    icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#8b5cf6" opacity="0.12"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#8b5cf6" stroke-width="1.2"/><rect x="8" y="10" width="20" height="16" rx="2" fill="none" stroke="#8b5cf6" stroke-width="1.5"/><circle cx="18" cy="18" r="3.5" fill="none" stroke="#8b5cf6" stroke-width="1.5"/></svg>` },
+  { appId: 'terminal',  label: 'Terminal',    icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#0ea5e9" opacity="0.15"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#0ea5e9" stroke-width="1.2"/><path d="M10 13l4 4-4 4M18 21h8" stroke="#0ea5e9" stroke-width="1.8" stroke-linecap="round"/></svg>` },
+  { appId: 'editor',    label: 'Text Editor', icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#6366f1" opacity="0.15"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#6366f1" stroke-width="1.2"/><path d="M10 12h10l4 4v8H10z" fill="none" stroke="#6366f1" stroke-width="1.5"/><path d="M13 20h7M13 23h5" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/></svg>` },
+  { appId: 'files',     label: 'Files',       icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#f59e0b" opacity="0.12"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#f59e0b" stroke-width="1.2"/><path d="M8 14h7l2 2h11v10H8z" fill="none" stroke="#f59e0b" stroke-width="1.5"/></svg>` },
+  { appId: 'voxpad',    label: 'VoxPad',      icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#22c55e" opacity="0.12"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#22c55e" stroke-width="1.2"/><path d="M12 12h5M12 17l8 0M12 22l6 0" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/><circle cx="24" cy="22" r="4" fill="none" stroke="#22c55e" stroke-width="1.5"/><path d="M26 24l2 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg>` },
+  { appId: 'navigator', label: 'Navigator',   icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#3b82f6" opacity="0.12"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#3b82f6" stroke-width="1.2"/><circle cx="18" cy="18" r="8" fill="none" stroke="#3b82f6" stroke-width="1.5"/><path d="M18 10v16M10 18h16" stroke="#3b82f6" stroke-width="1" opacity="0.5"/><path d="M14 12a10 10 0 0 0 0 12M22 12a10 10 0 0 1 0 12" fill="none" stroke="#3b82f6" stroke-width="1.2"/></svg>` },
+  { appId: 'sysmon',    label: 'Sys Monitor', icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#ef4444" opacity="0.1"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#ef4444" stroke-width="1.2"/><path d="M8 22l4-6 4 4 4-6 4 4" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>` },
+  { appId: 'library',   label: 'Library',     icon: `<svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" fill="#8b5cf6" opacity="0.12"/><rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#8b5cf6" stroke-width="1.2"/><rect x="8" y="10" width="20" height="16" rx="2" fill="none" stroke="#8b5cf6" stroke-width="1.5"/><circle cx="18" cy="18" r="3.5" fill="none" stroke="#8b5cf6" stroke-width="1.5"/></svg>` },
 ];
+
+// Default icon positions — stacked vertically on the left, clamped to screen
+function defaultIconPositions() {
+  const positions = {};
+  const ICON_W = 80, ICON_H = 100, MARGIN = 12;
+  const maxY = window.innerHeight - parseInt(getComputedStyle(document.documentElement).getPropertyValue('--os-taskbar-h')) - ICON_H - MARGIN;
+  let col = 0, row = 0;
+  const colW = ICON_W + MARGIN * 2;
+  DESKTOP_ICONS.forEach((ic, i) => {
+    const x = MARGIN + col * colW;
+    const y = MARGIN + row * ICON_H;
+    if (y + ICON_H > maxY) { col++; row = 0; }
+    positions[ic.appId] = { x: MARGIN + col * colW, y: MARGIN + (row++) * ICON_H };
+  });
+  return positions;
+}
+
+function loadIconPositions() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(ICON_POS_KEY));
+    return saved || defaultIconPositions();
+  } catch { return defaultIconPositions(); }
+}
+
+function saveIconPosition(appId, x, y) {
+  const positions = loadIconPositions();
+  positions[appId] = { x, y };
+  localStorage.setItem(ICON_POS_KEY, JSON.stringify(positions));
+}
+
+function clampIconPos(x, y) {
+  const ICON_W = 80, ICON_H = 100;
+  const taskbarH = 44;
+  const maxX = Math.max(0, window.innerWidth  - ICON_W);
+  const maxY = Math.max(0, window.innerHeight - taskbarH - ICON_H);
+  return {
+    x: Math.max(0, Math.min(x, maxX)),
+    y: Math.max(0, Math.min(y, maxY))
+  };
+}
 
 function buildDesktopIcons() {
   const desktop = document.getElementById('huna7-desktop');
+  const positions = loadIconPositions();
+
   DESKTOP_ICONS.forEach(ic => {
+    const saved = positions[ic.appId] || { x: 20, y: 20 };
+    const clamped = clampIconPos(saved.x, saved.y);
+
     const el = document.createElement('div');
     el.className = 'desktop-icon';
-    el.style.left = ic.x + 'px';
-    el.style.top  = ic.y + 'px';
+    el.style.left = clamped.x + 'px';
+    el.style.top  = clamped.y + 'px';
+    el.dataset.appId = ic.appId;
     el.innerHTML = ic.icon + `<span class="desktop-icon-label">${ic.label}</span>`;
-    el.addEventListener('dblclick', () => AppRegistry.launch(ic.appId));
+
+    // ── drag logic ─────────────────────────────────────
+    let isDragging = false;
+    let dragStartX, dragStartY, iconStartX, iconStartY;
+    let dragMoved = false;
+
+    el.addEventListener('mousedown', e => {
+      if (e.button !== 0) return;
+      isDragging = true;
+      dragMoved = false;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      iconStartX = el.offsetLeft;
+      iconStartY = el.offsetTop;
+      el.classList.add('dragging');
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!isDragging || el !== document.querySelector('.desktop-icon.dragging[data-app-id="' + ic.appId + '"]')) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragMoved = true;
+      const pos = clampIconPos(iconStartX + dx, iconStartY + dy);
+      el.style.left = pos.x + 'px';
+      el.style.top  = pos.y + 'px';
+    });
+
+    document.addEventListener('mouseup', e => {
+      if (!isDragging || el !== document.querySelector('.desktop-icon.dragging[data-app-id="' + ic.appId + '"]')) return;
+      isDragging = false;
+      el.classList.remove('dragging');
+      if (dragMoved) {
+        saveIconPosition(ic.appId, el.offsetLeft, el.offsetTop);
+      }
+    });
+
+    // ── double-click to open (only if not dragged) ─────
+    el.addEventListener('dblclick', () => {
+      if (!dragMoved) AppRegistry.launch(ic.appId);
+    });
+
     desktop.appendChild(el);
+  });
+
+  // re-clamp all icons on window resize
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.desktop-icon').forEach(icon => {
+      const pos = clampIconPos(icon.offsetLeft, icon.offsetTop);
+      icon.style.left = pos.x + 'px';
+      icon.style.top  = pos.y + 'px';
+    });
   });
 }
 
-/* ─── LAUNCHER ───────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: LAUNCHER
+═══════════════════════════════════════════════════════════ */
 const LAUNCHER_APPS = [
-  { id: 'terminal', label: 'Terminal', icon: `<svg width="24" height="24" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M6 9l3 3-3 3M11 15h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>` },
-  { id: 'editor',   label: 'Editor',   icon: `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 4h9l4 4v12H5z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 12h8M8 15h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>` },
-  { id: 'files',    label: 'Files',    icon: `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 8h7l2 2h9v10H3z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>` },
-  { id: 'voxpad',   label: 'VoxPad',   icon: `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 4h9M4 9h10M4 14h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="17" cy="17" r="5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M19 19l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>` },
-  { id: 'navigator',label: 'Navigator',icon: `<svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="0.8" opacity="0.4"/></svg>` },
-  { id: 'sysmon',   label: 'Monitor',  icon: `<svg width="24" height="24" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M5 14l3-4 3 3 3-5 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>` },
-  { id: 'library',  label: 'Library',  icon: `<svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>` },
+  { id: 'terminal',  label: 'Terminal',  icon: `<svg width="24" height="24" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M6 9l3 3-3 3M11 15h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>` },
+  { id: 'editor',    label: 'Editor',    icon: `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 4h9l4 4v12H5z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 12h8M8 15h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>` },
+  { id: 'files',     label: 'Files',     icon: `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 8h7l2 2h9v10H3z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>` },
+  { id: 'voxpad',    label: 'VoxPad',    icon: `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 4h9M4 9h10M4 14h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="17" cy="17" r="5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M19 19l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>` },
+  { id: 'navigator', label: 'Navigator', icon: `<svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="0.8" opacity="0.4"/></svg>` },
+  { id: 'sysmon',    label: 'Monitor',   icon: `<svg width="24" height="24" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M5 14l3-4 3 3 3-5 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>` },
+  { id: 'library',   label: 'Library',   icon: `<svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>` },
 ];
 
 function buildLauncher() {
@@ -717,10 +1108,7 @@ function buildLauncher() {
     const el = document.createElement('div');
     el.className = 'launcher-item';
     el.innerHTML = app.icon + `<span>${app.label}</span>`;
-    el.addEventListener('click', () => {
-      AppRegistry.launch(app.id);
-      toggleLauncher(false);
-    });
+    el.addEventListener('click', () => { AppRegistry.launch(app.id); toggleLauncher(false); });
     grid.appendChild(el);
   });
 }
@@ -732,7 +1120,9 @@ function toggleLauncher(force) {
   lnch.style.display = _launcherOpen ? 'block' : 'none';
 }
 
-/* ─── CLOCK ──────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: CLOCK
+═══════════════════════════════════════════════════════════ */
 function startClock() {
   function tick() {
     const now = new Date();
@@ -740,21 +1130,30 @@ function startClock() {
     const m = String(now.getMinutes()).padStart(2,'0');
     const s = String(now.getSeconds()).padStart(2,'0');
     const d = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-    document.getElementById('os-clock').textContent = `${d}   ${h}:${m}:${s}`;
+    const el = document.getElementById('os-clock');
+    // on small screens just show time
+    if (window.innerWidth < 600) {
+      el.textContent = `${h}:${m}:${s}`;
+    } else {
+      el.textContent = `${d}   ${h}:${m}:${s}`;
+    }
   }
   tick();
   setInterval(tick, 1000);
 }
 
-/* ─── DESKTOP EVENTS ─────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: DESKTOP EVENTS
+═══════════════════════════════════════════════════════════ */
 function registerDesktopEvents() {
   const desktop = document.getElementById('huna7-desktop');
   const ctx = document.getElementById('desktop-ctx');
 
   desktop.addEventListener('contextmenu', e => {
+    if (e.target.closest('.desktop-icon')) return; // icons handle their own ctx
     e.preventDefault();
-    ctx.style.left = e.clientX + 'px';
-    ctx.style.top  = e.clientY + 'px';
+    ctx.style.left = Math.min(e.clientX, window.innerWidth  - 170) + 'px';
+    ctx.style.top  = Math.min(e.clientY, window.innerHeight - 160) + 'px';
     ctx.style.display = 'block';
   });
 
@@ -771,7 +1170,9 @@ function closeCtx() {
   document.getElementById('desktop-ctx').style.display = 'none';
 }
 
-/* ─── NOTIFICATIONS ──────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: NOTIFICATIONS
+═══════════════════════════════════════════════════════════ */
 function notify(msg, type = '') {
   const container = document.getElementById('huna7-notifs');
   const el = document.createElement('div');
@@ -784,12 +1185,13 @@ function notify(msg, type = '') {
   }, 3000);
 }
 
-// Subscribe to kernel events for notifications
 window.__HUNA7_BUS__.on('auth.success', () => notify('Admin access granted.', 'ok'));
 window.__HUNA7_BUS__.on('auth.revoked', () => notify('Admin session revoked.', 'err'));
 window.__HUNA7_BUS__.on('file.created', e => notify('File updated: ' + (e.payload.path || ''), ''));
 
-/* ─── BOOT ───────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   HUNA7-OS :: ENTRY POINT
+═══════════════════════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
   bootSequence();
 });
